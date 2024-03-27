@@ -5,6 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.ticker as mticker
+import time
 
 #Remove Warnings
 warnings.filterwarnings('ignore', category=pd.core.generic.SettingWithCopyWarning)
@@ -95,30 +96,39 @@ df['Price per Square ft'] = df['Price'] / df['Area']
 
 #Facts Table 
 
-salesPriceDF = df[['Location', 'Area', 'Price']].reset_index()
-salesPriceDF['SaleID'] = salesPriceDF.index + 1
+salesPriceDF = df[['Location', 'Area', 'Price']].rename(columns=lambda x: x.lower())
+salesPriceDF['saleid'] = salesPriceDF.index + 1
 
 #Creating the Dimension Tables  
 
-householdApplianceDF = df[['WashingMachine', 'AC', 'Microwave', 'TV','Wardrobe','Refrigerator' ]]
-outdoorAmentitiesDF = df[['SwimmingPool', 'LandscapedGardens', 'JoggingTrack', 'RainWaterHarvesting']]
-communityDF = df[['ShoppingMall', 'SportsFacility', 'School','Hospital']]
+householdApplianceDF = df[['WashingMachine', 'AC', 'Microwave', 'TV','Wardrobe','Refrigerator']].rename(columns=lambda x: x.lower())
+outdoorAmentitiesDF = df[['SwimmingPool', 'LandscapedGardens', 'JoggingTrack', 'RainWaterHarvesting']].rename(columns=lambda x: x.lower())
+communityDF = df[['ShoppingMall', 'SportsFacility', 'School','Hospital']].rename(columns=lambda x: x.lower())
 indoorRoomsDF = df[['NumOfBedrooms', 'Gymnasium', 'IndoorGames','Clubhouse','MultipurposeRoom','ChildrenPlayArea']]
+
+indoorRoomsDF = indoorRoomsDF.rename(columns={
+    "NumOfBedrooms": "numofbedrooms",
+    "Gymnasium": "gymnasium",
+    "IndoorGames": "indoorgames",
+    "Clubhouse": "clubhouse",
+    "MultipurposeRoom": "multipurposeroom",
+    "ChildrenPlayArea": "childrenplayarea"
+})
 
 # householdApplianceDF['HouseHoldApplianceID'] = salesPriceDF['SaleID']
 # outdoorAmentitiesDF['OutdoorAmentitieseID'] = salesPriceDF['SaleID']
 # communityDF['CommunityID'] = salesPriceDF['SaleID']
 # indoorRoomsDF['IndoorRoomID'] = salesPriceDF['SaleID']
 
-householdApplianceDF['HouseHoldApplianceID'] = range(1, len(householdApplianceDF) + 1)
-outdoorAmentitiesDF['OutdoorAmentitiesID'] = range(1, len(outdoorAmentitiesDF) + 1)
-communityDF['CommunityID'] = range(1, len(communityDF) + 1)
-indoorRoomsDF['IndoorRoomID'] = range(1, len(indoorRoomsDF) + 1)
+householdApplianceDF['householdapplianceid'] = range(1, len(householdApplianceDF) + 1)
+outdoorAmentitiesDF['outdooramentitiesid'] = range(1, len(outdoorAmentitiesDF) + 1)
+communityDF['communityid'] = range(1, len(communityDF) + 1)
+indoorRoomsDF['indoorroomid'] = range(1, len(indoorRoomsDF) + 1)
 
-salesPriceDF['HouseHoldApplianceID'] = householdApplianceDF['HouseHoldApplianceID']
-salesPriceDF['OutdoorAmentitiesID'] = outdoorAmentitiesDF['OutdoorAmentitiesID']
-salesPriceDF['CommunityID'] = communityDF['CommunityID']
-salesPriceDF['IndoorRoomID'] = indoorRoomsDF['IndoorRoomID']
+salesPriceDF['householdapplianceid'] = householdApplianceDF['householdapplianceid']
+salesPriceDF['outdooramentitiesid'] = outdoorAmentitiesDF['outdooramentitiesid']
+salesPriceDF['communityid'] = communityDF['communityid']
+salesPriceDF['indoorroomid'] = indoorRoomsDF['indoorroomid']
 
 
 
@@ -155,7 +165,7 @@ def plot_price_distribution(df):
     plt.tight_layout()
     plt.show()
 
-plot_price_distribution(df)
+# plot_price_distribution(df)
 
 #For Visual Representation of the Data 
 def plot_area_distribution(df):
@@ -181,7 +191,10 @@ def plot_area_distribution(df):
     plt.show()
 
 # Call the function with your DataFrame
-plot_area_distribution(df)
+# plot_area_distribution(df)
+    
+for column in salesPriceDF.columns:
+    print(salesPriceDF[column])
 
 
 # Create SQLAlchemy engine
@@ -190,6 +203,7 @@ engine = create_engine(connection_string)
 # Send DataFrame to SQL database
 # Replace 'table_name' with the name of the table you want to create or append to in your database
 df.to_sql('originalframe', engine, if_exists='replace', index=False)
+
 salesPriceDF.to_sql('salespricefactstable', engine, if_exists='replace', index=False)
 householdApplianceDF.to_sql('householddimension', engine, if_exists='replace', index=False)
 outdoorAmentitiesDF.to_sql('outdooramentitiesdimension', engine, if_exists='replace', index=False)
@@ -197,22 +211,23 @@ communityDF.to_sql('communitydimension', engine, if_exists='replace', index=Fals
 indoorRoomsDF.to_sql('indoorroomsdimension', engine, if_exists='replace', index=False)
 
 # Select all rows from the 'standardDF' table and load into a DataFrame
-salespricefactstable = pd.read_sql("SELECT * FROM salespricefactstable", engine)
+salespricefactstable = pd.read_sql("SELECT saleid FROM salespricefactstable", engine)
 householddimension = pd.read_sql("SELECT * FROM householddimension", engine)
 outdooramentitiesdimension = pd.read_sql("SELECT * FROM outdooramentitiesdimension", engine)
 communitydimension = pd.read_sql("SELECT * FROM communitydimension", engine)
 indoorroomsdimension = pd.read_sql("SELECT * FROM indoorroomsdimension", engine)
 
-print("First 10 Rows of Fact Table ")
-print(salespricefactstable.head(10))
-print("First 10 Rows of Household Dimension ")
-print(householddimension.head(10))
-print("First 10 Rows of Outdoor Amentities Dimension  ")
-print(outdooramentitiesdimension.head(10))
-print("First 10 Rows of Community Dimension ")
-print(communitydimension.head(10))
-print("First 10 Rows of Indoor Room Dimension")
-print(indoorroomsdimension.head(10))
+# print("First 10 Rows of Fact Table ")
+# print(salespricefactstable.head(10))
+# print("First 10 Rows of Household Dimension ")
+# print(householddimension.head(10))
+# print("First 10 Rows of Outdoor Amentities Dimension  ")
+# print(outdooramentitiesdimension.head(10))
+# print("First 10 Rows of Community Dimension ")
+# print(communitydimension.head(10))
+# print("First 10 Rows of Indoor Room Dimension")
+# print(indoorroomsdimension.head(10))
+
 
 # Dispose of the engine
 engine.dispose()
