@@ -122,24 +122,57 @@ WINDOW
 
 
 # Execute the query and read into DataFrame
-#drillDown = pd.read_sql(drillDownQuery, engine)
-#rollUp = pd.read_sql(rollUpQuery, engine)
-#slice = pd.read_sql(sliceQuery, engine)
-# dice1 = pd.read_sql(diceQuery1, engine)
-#dice2 = pd.read_sql(diceQuery2, engine)
+drillDown = pd.read_sql(drillDownQuery, engine)
+rollUp = pd.read_sql(rollUpQuery, engine)
+slice = pd.read_sql(sliceQuery, engine)
+dice1 = pd.read_sql(diceQuery1, engine)
+dice2 = pd.read_sql(diceQuery2, engine)
 
 
-#combined1 = pd.read_sql(combinedQuery1, engine)
-#combined2 = pd.read_sql(combinedQuery2, engine)
-#combined3 = pd.read_sql(combinedQuery3, engine)
-#combined4 = pd.read_sql(combinedQuery4, engine)
+combined1 = pd.read_sql(combinedQuery1, engine)
+combined2 = pd.read_sql(combinedQuery2, engine)
+combined3 = pd.read_sql(combinedQuery3, engine)
+combined4 = pd.read_sql(combinedQuery4, engine)
 
 
-# iceBerg = pd.read_sql(icebergQuery, engine)
+iceBerg = pd.read_sql(icebergQuery, engine)
 
-#window = pd.read_sql(windowQuery, engine)
+window = pd.read_sql(windowQuery, engine)
 
-#windowing = pd.read_sql(windowingQuery, engine)
+windowing = pd.read_sql(windowingQuery, engine)
 
+print("Printing 'drillDown' query results:")
+print(drillDown)
 
+print("Printing 'rollUp' query results:")
+print(rollUp)
 
+print("Printing 'slice' query results:")
+print(slice)
+
+print("Printing 'dice1' query results:")
+print(dice1)
+
+print("Printing 'dice2' query results:")
+print(dice2)
+
+print("Printing 'combined1' query results:")
+print(combined1)
+
+print("Printing 'combined2' query results:")
+print(combined2) 
+
+print("Printing 'combined3' query results:")
+print(combined3)
+
+print("Printing 'combined4' query results:")
+print(combined4)
+
+print("Printing 'iceBerg' query results:")
+print(iceBerg)
+
+print("Printing 'window' query results:")
+print(window) 
+
+print("Printing 'windowing' query results:")
+print(windowing)
