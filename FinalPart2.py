@@ -1,4 +1,3 @@
-import pandas as pd
 from sqlalchemy import create_engine
 import warnings
 from sklearn.preprocessing import MinMaxScaler
@@ -15,10 +14,10 @@ warnings.filterwarnings('ignore', category=pd.core.generic.SettingWithCopyWarnin
 #Insert your username, password, host and database name
 connection_string = ""
 
+import pandas as pd
+
 #For reading the data from a url
 url = 'https://raw.githubusercontent.com/DarcyZeng1/HouseData/main/Bangalore.csv'
-
-
 
 df= pd.read_csv(url)
 
@@ -165,7 +164,7 @@ def plot_price_distribution(df):
     plt.tight_layout()
     plt.show()
 
-# plot_price_distribution(df)
+plot_price_distribution(df)
 
 #For Visual Representation of the Data 
 def plot_area_distribution(df):
@@ -191,7 +190,7 @@ def plot_area_distribution(df):
     plt.show()
 
 # Call the function with your DataFrame
-# plot_area_distribution(df)
+plot_area_distribution(df)
     
 for column in salesPriceDF.columns:
     print(salesPriceDF[column])
@@ -199,35 +198,39 @@ for column in salesPriceDF.columns:
 
 # Create SQLAlchemy engine
 engine = create_engine(connection_string)
+salesPriceDF.to_sql('salespricefactstable', engine, if_exists='replace', index=False)
+
+
+
+householdApplianceDF.to_sql('householddimension', engine, if_exists='replace', index=False)
+
 
 # Send DataFrame to SQL database
-# Replace 'table_name' with the name of the table you want to create or append to in your database
 df.to_sql('originalframe', engine, if_exists='replace', index=False)
 
-salesPriceDF.to_sql('salespricefactstable', engine, if_exists='replace', index=False)
-householdApplianceDF.to_sql('householddimension', engine, if_exists='replace', index=False)
-outdoorAmentitiesDF.to_sql('outdooramentitiesdimension', engine, if_exists='replace', index=False)
-communityDF.to_sql('communitydimension', engine, if_exists='replace', index=False)
-indoorRoomsDF.to_sql('indoorroomsdimension', engine, if_exists='replace', index=False)
 
-# Select all rows from the 'standardDF' table and load into a DataFrame
-salespricefactstable = pd.read_sql("SELECT saleid FROM salespricefactstable", engine)
-householddimension = pd.read_sql("SELECT * FROM householddimension", engine)
-outdooramentitiesdimension = pd.read_sql("SELECT * FROM outdooramentitiesdimension", engine)
-communitydimension = pd.read_sql("SELECT * FROM communitydimension", engine)
-indoorroomsdimension = pd.read_sql("SELECT * FROM indoorroomsdimension", engine)
+# outdoorAmentitiesDF.to_sql('outdooramentitiesdimension', engine, if_exists='replace', index=False)
+# communityDF.to_sql('communitydimension', engine, if_exists='replace', index=False)
+# indoorRoomsDF.to_sql('indoorroomsdimension', engine, if_exists='replace', index=False)
 
-# print("First 10 Rows of Fact Table ")
-# print(salespricefactstable.head(10))
-# print("First 10 Rows of Household Dimension ")
-# print(householddimension.head(10))
-# print("First 10 Rows of Outdoor Amentities Dimension  ")
-# print(outdooramentitiesdimension.head(10))
-# print("First 10 Rows of Community Dimension ")
-# print(communitydimension.head(10))
-# print("First 10 Rows of Indoor Room Dimension")
-# print(indoorroomsdimension.head(10))
+# # Select all rows from the 'standardDF' table and load into a DataFrame
+# salespricefactstable = pd.read_sql("SELECT saleid FROM salespricefactstable", engine)
+# householddimension = pd.read_sql("SELECT * FROM householddimension", engine)
+# outdooramentitiesdimension = pd.read_sql("SELECT * FROM outdooramentitiesdimension", engine)
+# communitydimension = pd.read_sql("SELECT * FROM communitydimension", engine)
+# indoorroomsdimension = pd.read_sql("SELECT * FROM indoorroomsdimension", engine)
+
+# # print("First 10 Rows of Fact Table ")
+# # print(salespricefactstable.head(10))
+# # print("First 10 Rows of Household Dimension ")
+# # print(householddimension.head(10))
+# # print("First 10 Rows of Outdoor Amentities Dimension  ")
+# # print(outdooramentitiesdimension.head(10))
+# # print("First 10 Rows of Community Dimension ")
+# # print(communitydimension.head(10))
+# # print("First 10 Rows of Indoor Room Dimension")
+# # print(indoorroomsdimension.head(10))
 
 
-# Dispose of the engine
-engine.dispose()
+# # Dispose of the engine
+# engine.dispose()

@@ -99,8 +99,8 @@ WHERE price > 60000000;
 windowingQuery = """
 SELECT
     *,
-    AVG(Price / Area) OVER () AS avg_price_per_sqm,
-    RANK() OVER (ORDER BY Price / Area DESC) AS price_per_sqm_rank
+    AVG(Price / Area) OVER () AS avgPricePerSqF,
+    RANK() OVER (ORDER BY Price / Area DESC) AS pricePerSqFRank
 FROM
     salespricefactstable;
 """
