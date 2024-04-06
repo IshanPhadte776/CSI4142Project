@@ -1,3 +1,5 @@
+View this File in the "Code" Version, the results will look organized
+
 Printing 'drillDown' query results:
     numofbedrooms  multipurposeroom  childrenplayarea  numofentries
 0               5              True              True             2
